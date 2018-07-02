@@ -1,8 +1,11 @@
 package com.dollar.ankit.onlinevoting;
 
+import android.content.Context;
 import android.content.Intent;
+import android.content.SharedPreferences;
 import android.support.v7.app.AppCompatActivity;
 import android.os.Bundle;
+import android.widget.TextView;
 
 public class user extends AppCompatActivity {
 
@@ -10,6 +13,11 @@ public class user extends AppCompatActivity {
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_user);
+        SharedPreferences sharedpreferences = getSharedPreferences(login.MyPREFERENCES, Context.MODE_PRIVATE);
+        String name = sharedpreferences.getString("nameKey","");
         Intent intent = getIntent();
+        TextView testDisplay = findViewById(R.id.userName);
+        String temp = "Welcome " + name;
+        testDisplay.setText(temp);
     }
 }

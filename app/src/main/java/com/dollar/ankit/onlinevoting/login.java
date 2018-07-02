@@ -1,6 +1,7 @@
 package com.dollar.ankit.onlinevoting;
 
 import android.content.Intent;
+import android.content.SharedPreferences;
 import android.os.StrictMode;
 import android.support.annotation.NonNull;
 import android.support.v7.app.AppCompatActivity;
@@ -11,6 +12,7 @@ import android.view.View;
 import android.widget.AutoCompleteTextView;
 import android.widget.EditText;
 import android.widget.TextView;
+import android.widget.Toast;
 
 import com.google.android.gms.tasks.OnCompleteListener;
 import com.google.android.gms.tasks.Task;
@@ -35,7 +37,14 @@ public class login extends AppCompatActivity {
     CollectionReference cities;
     DocumentReference docRef;
     Query query;
-    String temp, temp2;
+    public static boolean loginStatus1;
+    public static final String MyPREFERENCES = "MyPrefs" ;
+    public static final String Name = "nameKey";
+    public static final String Email = "emailKey";
+    public static final String loginStatus = "loginKey";
+    SharedPreferences sharedpreferences;
+
+    //String temp, temp2;
 //    private MongoClient mongoClient;
 //    private MongoDatabase database;
 //    private MongoCollection<Document> collection;
@@ -51,126 +60,108 @@ public class login extends AppCompatActivity {
             StrictMode.setThreadPolicy(policy);
         }
         testDisplay = findViewById((R.id.sampleText));
-        FirebaseFirestore db = FirebaseFirestore.getInstance();
-        cities = db.collection("users");
-        query = cities.whereEqualTo("email","gym.president@lnmiit.ac.in");
 
-                query.get()
-                .addOnCompleteListener(new OnCompleteListener<QuerySnapshot>() {
-                    @Override
-                    public void onComplete(@NonNull Task<QuerySnapshot> task) {
-                        if (task.isSuccessful()) {
-                            for (QueryDocumentSnapshot document : task.getResult()) {
-                                Log.d("sample", document.get("name") + " => " + document.get("password"));
-                                temp = document.get("name").toString();
-                                testDisplay.setText(temp);
-                                Log.d("me",temp);
-                            }
-                        } else {
-                            Log.d("sample2", "Error getting documents: ", task.getException());
-                        }
-                    }
-                });
-
-
-
-
-//        mongoClient = MongoClients.create("mongodb://dollar:lnmiit123@ds121311.mlab.com:21311/onlinevoting");
-//        database = mongoClient.getDatabase("onlinevoting");
-
-        //android.util.Log.d("name",database.getName());
-        // Set up the login form.
         mEmailView = (android.widget.AutoCompleteTextView) findViewById(R.id.email);
+
     }
 
     public void authentication(View view) {
         mEmailView = (android.widget.AutoCompleteTextView) findViewById(R.id.email);
         mPasswordView = (EditText) findViewById(R.id.pass);
+        db = FirebaseFirestore.getInstance();
 
         // Store values at the time of the login attempt.
         String email = mEmailView.getText().toString();
         String password = mPasswordView.getText().toString();
 
-        boolean cancel = false;
-        View focusView = null;
-        String temp = null;
-
-        //collection = database.getCollection("users");
-        //findIterable = collection.find(new Document());
+        final boolean[] cancel = new boolean[2];
+        View focusView;
+        final String[] temp = new String[2];
 
         // Check for a valid email address.
-        boolean chcklnmiitemail= email.endsWith("lnmiit.ac.in");
+        boolean checklnmiitemail= email.endsWith("lnmiit.ac.in");
 
         if (!isEmailValid(email)) {
             mEmailView.setError(getString(R.string.error_invalid_email));
             focusView = mEmailView;
-            cancel = true;
+            //cancel = true;
             focusView.requestFocus();
             return;
         }
-        else if (TextUtils.isEmpty(email) || !chcklnmiitemail) {
-            mEmailView.setError(getString(R.string.error_invalid_email));
+        else if (TextUtils.isEmpty(email)) {
+            mEmailView.setError(getString(R.string.empty));
             focusView = mEmailView;
-            cancel = true;
+            //cancel = true;
             focusView.requestFocus();
             return;
         }
-
-
-        //findIterable = collection.find(eq("email", email));
-//        if(findIterable!=null) {
-//            for (Document doc : findIterable) {
-//                temp = doc.getString("password");
-//                android.util.Log.d("aa",temp);
-//            }
-//            cancel=false;
-//        }
-//        else{
-//            mEmailView.setError(getString(R.string.email_not_found));
-//            focusView = mEmailView;
-//            cancel = true;
-//            focusView.requestFocus();
-//            return;
-//        }
-
-        //check Password
-
-        if (TextUtils.isEmpty(password) || !isPasswordValid(password)) {
-            mPasswordView.setError(getString(R.string.error_invalid_password));
+        else if(!checklnmiitemail){
+            mEmailView.setError(getString(R.string.invalid_lnmiit_email));
+            focusView = mEmailView;
+            //cancel = true;
+            focusView.requestFocus();
+            return;
+        }
+        else if (TextUtils.isEmpty(password)) {
+            mPasswordView.setError(getString(R.string.empty));
             focusView = mPasswordView;
             focusView.requestFocus();
-            cancel = true;
+            //cancel = true;
             return;
         }
-        else{
-            if(!password.equals(temp)){
-                mPasswordView.setError(getString(R.string.wrong_password));
+        else if(!isPasswordValid(password)){
+                mPasswordView.setError(getString(R.string.error_invalid_password));
                 focusView = mPasswordView;
-                cancel = true;
+                //cancel = true;
                 focusView.requestFocus();
                 return;
+        }
+        else{
+            cities = db.collection("users");
+            query = cities.whereEqualTo("email",email).whereEqualTo("password",password);
+
+            query.get()
+                    .addOnCompleteListener(new OnCompleteListener<QuerySnapshot>() {
+                        @Override
+                        public void onComplete(@NonNull Task<QuerySnapshot> task) {
+                            if (task.isSuccessful()) {
+                                for (QueryDocumentSnapshot document : task.getResult()) {
+                                    temp[0] = document.get("name").toString();
+                                    temp[1] = document.get("type").toString();
+                                    cancel[0] = false;
+                                }
+                            } else {
+                                Toast.makeText(login.this, "ERROR" + R.string.email_not_found,
+                                        Toast.LENGTH_SHORT).show();
+                                cancel[0] = true;
+                                Log.d("sample2", "Error getting documents: ", task.getException());
+                            }
+                        }
+                    });
+
+            if(cancel[0]){
+                return;
+            }
+            else{
+                SharedPreferences.Editor editor = sharedpreferences.edit();
+                editor.putString(Name, temp[0]);
+                editor.putString(loginStatus, "true");
+                editor.putString(Email, email);
+                editor.commit();
+
+                if(temp[1].equals("voter")) {
+                    Intent intent = new Intent(this, user.class);
+                    loginStatus1=true;
+                    startActivity(intent);
+                }
+                else if(temp[1].equals("admin")) {
+                    Intent intent = new Intent(this, admin.class);
+                    loginStatus1=true;
+                    startActivity(intent);
+                }
+
             }
         }
-
-
-        if (cancel) {
-            // There was an error; don't attempt login and focus the first
-            // form field with an error.
-            focusView.requestFocus();
-            return;
-        } else {
-            Intent intent = new Intent(this, user.class);
-            startActivity(intent);
-            // Show a progress spinner, and kick off a background task to
-            // perform the user login attempt.
-            //showProgress(true);
-            //mAuthTask = new UserLoginTask(email, password);
-            //mAuthTask.execute((Void) null);
-        }
-
-
-
-
     }
 
     private boolean isEmailValid(String email) {

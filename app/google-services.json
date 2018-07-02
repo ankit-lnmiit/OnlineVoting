@@ -1,0 +1,42 @@
+{
+  "project_info": {
+    "project_number": "630922537881",
+    "firebase_url": "https://onlinevoting-1c84f.firebaseio.com",
+    "project_id": "onlinevoting-1c84f",
+    "storage_bucket": "onlinevoting-1c84f.appspot.com"
+  },
+  "client": [
+    {
+      "client_info": {
+        "mobilesdk_app_id": "1:630922537881:android:2f7cb0b4f3966ac0",
+        "android_client_info": {
+          "package_name": "com.dollar.ankit.onlinevoting"
+        }
+      },
+      "oauth_client": [
+        {
+          "client_id": "630922537881-6qnv88oob70jtpik4dkoa05ddon6bslq.apps.googleusercontent.com",
+          "client_type": 3
+        }
+      ],
+      "api_key": [
+        {
+          "current_key": "AIzaSyDiHuKEPKh6F0hL-CHfxWrl36OfjV63GAY"
+        }
+      ],
+      "services": {
+        "analytics_service": {
+          "status": 1
+        },
+        "appinvite_service": {
+          "status": 1,
+          "other_platform_oauth_client": []
+        },
+        "ads_service": {
+          "status": 2
+        }
+      }
+    }
+  ],
+  "configuration_version": "1"
+}

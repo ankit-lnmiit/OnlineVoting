@@ -17,6 +17,7 @@ public class admin extends AppCompatActivity {
         String name = sharedpreferences.getString("nameKey","");
         Intent intent = getIntent();
         TextView testDisplay = findViewById(R.id.adminName);
-        testDisplay.setText("Welcome " + name);
+        String temp = "Welcome " + name;
+        testDisplay.setText(temp);
     }
 }

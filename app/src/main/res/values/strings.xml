@@ -17,4 +17,6 @@
         completions."
     </string>
     <string name="title_activity_admin">admin</string>
+    <string name="title_activity_add_position">addPosition</string>
+    <string name="action_settings">Settings</string>
 </resources>

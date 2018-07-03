@@ -24,7 +24,7 @@
         </activity>
         <activity android:name=".login" />
         <activity android:name=".user" />
-        <activity android:name=".admin"></activity>
+        <activity android:name=".admin" ></activity>
     </application>
 
 </manifest>

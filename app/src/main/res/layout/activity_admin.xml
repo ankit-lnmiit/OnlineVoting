@@ -140,6 +140,7 @@
         android:layout_marginEnd="8dp"
         android:layout_marginStart="8dp"
         android:layout_marginTop="24dp"
+        android:background="@color/ankit"
         app:layout_constraintBottom_toBottomOf="parent"
         app:layout_constraintEnd_toEndOf="parent"
         app:layout_constraintStart_toStartOf="parent"
@@ -192,7 +193,7 @@
 
     <TextView
         android:id="@+id/adminName"
-        android:layout_width="235dp"
+        android:layout_width="371dp"
         android:layout_height="39dp"
         android:layout_marginBottom="28dp"
         android:layout_marginEnd="8dp"
